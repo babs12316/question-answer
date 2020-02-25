@@ -6,11 +6,11 @@
    <div class="qnumber">1.</div>
     <div class="qtext">How do you feel today? </div>
     <div id="options">
-      <div v-on:click="greet" class="circle">1</div>
-     <div class="circle">2</div>
-     <div class="circle">3</div>
-      <div class="circle">4</div>
-      <div class="circle">5</div>
+      <div v-on:click="selected" class="circle">1</div>
+     <div v-on:click="selected"   class="circle">2</div>
+     <div v-on:click="selected" class="circle">3</div>
+      <div v-on:click="selected" class="circle">4</div>
+      <div v-on:click="selected" class="circle">5</div>
       </div>
       <div v-if="!isHidden" >
       <textarea cols="30" placehoder="value">
@@ -18,11 +18,34 @@
 </textarea>
       </div>
    </div>   
-      <div class="question">
+      <div class="question" v-responsive="'hidden-xs'">
         <div class="qnumber">2.</div>
         <div class="qtext">Your age </div>
+       <div id="aoptions">
+         <span>&lt;20</span>
+         <span>20&#45;29</span>
+         <span>30&#45;39</span>
+         <span>40&#45;49</span>
+         <span>50&#45;59</span>
+         <span>60&#45;69</span>
+         <span>70&#45;79</span>
+         <span>80+</span>
+       </div>
       </div>
-  </div>   
+      <div class="question">
+        <div class="qnumber">3.</div>
+        <div class="qtext">Your password </div>
+         <input type="password" />
+      </div>
+      <div class="question">
+        <div class="qnumber">4.</div>
+        <div class="qtext">Your email </div>
+         <input type="text" />
+      </div>
+  <div><button class="submit">Submit</button></div>
+  </div>
+  
+  
 </template>
 
 <script>
@@ -34,12 +57,13 @@ export default {
   data() {
   return {
      isHidden: true
-  };
+    };
  },
   methods:{
-   greet: function () {
+   selected: function () {
       alert("hello");
       this.isHidden = false;
+      this.isActive = !this.isActive;
     }
   }
 
@@ -80,6 +104,7 @@ a {
   font-size: 20px;
   font-weight: 500;
   color:slategrey;
+  margin-bottom: 10px;
 }
 textarea{
   border-radius: 5px;
@@ -102,4 +127,34 @@ textarea{
 #options{
   display: inline-flex;
 }
+#aoptions{
+  border:1px solid #ccc;
+  padding:10px;
+  display: inline-block;
+  border-radius: 5px;
+}
+#aoptions span{
+  border-right:1px solid #ccc;
+  padding: 10px;
+}
+#aoptions span:last-child{
+  border-right:none;
+} 
+input{
+  padding: 10px;
+    border-radius: 7px;
+    width: 35%;
+}
+.submit{
+  background-color: #46c4ba;
+    color: #fff;
+    box-shadow: none;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    margin-top: 50px;
+    font-size: 18px;
+    
+}
+
 </style>
