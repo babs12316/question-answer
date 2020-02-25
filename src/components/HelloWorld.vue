@@ -1,35 +1,28 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <h2>Customer Alliance Form </h2>
+   <div class="question">  
+   <div class="qnumber">1.</div>
+    <div class="qtext">How do you feel today? </div>
+    <div id="options">
+      <div v-on:click="greet" class="circle">1</div>
+     <div class="circle">2</div>
+     <div class="circle">3</div>
+      <div class="circle">4</div>
+      <div class="circle">5</div>
+      </div>
+      <div v-if="!isHidden" >
+      <textarea cols="30" placehoder="value">
+        Tell us how can we improve?
+</textarea>
+      </div>
+   </div>   
+      <div class="question">
+        <div class="qnumber">2.</div>
+        <div class="qtext">Your age </div>
+      </div>
+  </div>   
 </template>
 
 <script>
@@ -37,7 +30,19 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+  return {
+     isHidden: true
+  };
+ },
+  methods:{
+   greet: function () {
+      alert("hello");
+      this.isHidden = false;
+    }
   }
+
 }
 </script>
 
@@ -56,5 +61,45 @@ li {
 }
 a {
   color: #42b983;
+}
+.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgba(209,209,209,1);
+    line-height: 50px;
+    text-align: center;
+    background: rgba(238,238,238,1);
+    float: left;
+    margin-top: 1%;
+    margin-right: 1%;
+}
+.qtext{
+  font-size: 20px;
+  font-weight: 500;
+  color:slategrey;
+}
+textarea{
+  border-radius: 5px;
+  display: inline-flex;
+  margin-top: 1%;
+}
+.qnumber{
+  font-size: 20px;
+    color: #4166b4;
+    font-weight: bold;
+}
+.question{
+  margin-top: 1%;
+  float: left;
+    width: 100%;
+}
+.circle:focus{
+  background:rgba(162,225,220);
+}
+#options{
+  display: inline-flex;
 }
 </style>
