@@ -1,54 +1,95 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <h2>Customer Alliance Form </h2>
+  <form @submit.prevent="handleSubmit">
    <div class="question">  
    <div class="qnumber">1.</div>
     <div class="qtext">How do you feel today? </div>
-    <div id="options">
-      <div v-on:click="selected" class="circle">1</div>
-     <div v-on:click="selected"   class="circle">2</div>
-     <div v-on:click="selected" class="circle">3</div>
-      <div v-on:click="selected" class="circle">4</div>
-      <div v-on:click="selected" class="circle">5</div>
+    <div id="options" >
+      <div v-on:click="selected(1,'How can we improve?','How do you feel today?','1')"  :class="{ active : active_el == 1 }" class="circle">1</div>
+     <div v-on:click="selected(2,'How can we improve?','How do you feel today?','2')"  :class="{ active : active_el == 2 }"  class="circle">2</div>
+     <div v-on:click="selected(3,'What have we done better!','How do you feel today?','3')" :class="{ active : active_el == 3 }" class="circle">3</div>
+      <div v-on:click="selected(4,'What have we done better!','How do you feel today?','4')" :class="{ active : active_el == 4 }" class="circle">4</div>
+      <div v-on:click="selected(5,'What have we done better!','How do you feel today?','5')" :class="{ active : active_el == 5 }" class="circle">5</div>
       </div>
       <div v-if="!isHidden" >
-      <textarea cols="30" placehoder="value">
-        Tell us how can we improve?
-</textarea>
+      <textarea cols="30"    v-model="feedback"/>
       </div>
    </div>   
-      <div class="question" v-responsive="'hidden-xs'">
+  
+      <div class="question" v-responsive="['hidden-all','md','lg','xl']">
         <div class="qnumber">2.</div>
         <div class="qtext">Your age </div>
-       <div id="aoptions">
-         <span>&lt;20</span>
+       <div id="ansoptions">
+         <span v-on:click="ageselected('Your age','&lt;20')">&lt;20</span>
+         <span v-on:click="ageselected('Your age','20-29')">20&#45;29</span>
+         <span v-on:click="ageselected('Your age','30-39')">30&#45;39</span>
+         <span v-on:click="ageselected('Your age','40-49')">40&#45;49</span>
+         <span v-on:click="ageselected('Your age','50-59')">50&#45;59</span>
+         <span v-on:click="ageselected('Your age','60-69')">60&#45;69</span>
+         <span v-on:click="ageselected('Your age','70-79')">70&#45;79</span>
+         <span v-on:click="ageselected('Your age','80+')">80+</span>
+       </div>
+      </div>
+        <div class="question" v-responsive.xs.sm>
+        <div class="qnumber">2.</div>
+        <div class="qtext">Your age Mobile </div>
+       <div id="ansoptions-mobile">
+         <div>
+         <span >&lt;20</span>
          <span>20&#45;29</span>
+         </div>
+         <div>
          <span>30&#45;39</span>
          <span>40&#45;49</span>
+         </div>
+         <div>
          <span>50&#45;59</span>
          <span>60&#45;69</span>
+         </div>
+         <div>
          <span>70&#45;79</span>
          <span>80+</span>
+         </div>
        </div>
       </div>
       <div class="question">
         <div class="qnumber">3.</div>
         <div class="qtext">Your password </div>
-         <input type="password" />
-      </div>
+         
+        <input id="fpass1" v-model="$v.formResponses.password1.$model" type="password">
+  <p class="error" v-if="!$v.formResponses.password1.required">The password field is required</p>
+  <p class="error" v-if="!$v.formResponses.password1.strongPassword">Passwords needs to have a letter, a number</p></div>
       <div class="question">
         <div class="qnumber">4.</div>
         <div class="qtext">Your email </div>
-         <input type="text" />
-      </div>
-  <div><button class="submit">Submit</button></div>
+           <input id="femail" v-model="$v.formResponses.email.$model" type="email">
+      <p class="error" v-if="!$v.formResponses.email.required">this field is required</p>
+      <p class="error" v-if="!$v.formResponses.email.email">Needs to be a valid email.</p>
+    
   </div>
+
+  <div> <button class="submit" type="submit" >Submit!</button>
+ </div>
+  <div id="result" v-responsive="['hidden-all','xl']" v-if="!isResultHidden"><span id="qselected">{{qselected}}</span><br/><span id="ansselected">{{ansselected}}</span><hr/>
+  <span>Date of experience<br/>{{new Date().toLocaleString()}}</span>
+   </div>
+  </form>
+   <p v-if="errors" class="error">The form above has errors,
+    <br>please correct all errors
+  </p>
+  <p v-else-if="formTouched && uiState === 'submit clicked'" class="error">The form above is empty,
+    <br>Please fill all required fields!
+  </p>
+  <p v-else-if="uiState === 'form submitted'" class="success">Your form is submitted!</p>
+  </div>
+
   
   
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators';
 export default {
   name: 'HelloWorld',
   props: {
@@ -56,15 +97,73 @@ export default {
   },
   data() {
   return {
-     isHidden: true
-    };
- },
-  methods:{
-   selected: function () {
-      alert("hello");
-      this.isHidden = false;
-      this.isActive = !this.isActive;
+     isHidden: true,
+     isActive: false,
+     feedback:'',
+     qselected:'',
+     ansselected:'',
+     isResultHidden:true,
+    active_el:0,
+      name: '',
+      age: 0,
+      submitStatus: null,
+      emailValue:'',
+      uiState: "submit not clicked",
+      formTouched:'',
+    errors: false,
+      
+      formResponses: {
+       password1: '',
+       email:null
+     }
+     
     }
+ },
+ validations: {
+   
+formResponses: {
+   email: {
+        required,
+        email
+      },
+     password1: {
+      required,
+      strongPassword(password1) {
+        return (
+          /[a-z]/.test(password1) && // checks for a-z
+          /[0-9]/.test(password1)  // checks for 0-9
+         
+        );
+      }
+    }
+ }
+ },  
+  methods:{
+   selected: function (el,msg,q,ans) {
+      this.isHidden = false;
+      this.feedback=msg;
+      this.qselected=q;
+      this.ansselected=ans;
+      this.isResultHidden=false;
+      this.active_el = el;
+      
+     
+   },
+   ageselected:function(q,age){
+     this.qselected=q;
+     this.ansselected=age;
+     this.isResultHidden=false;
+   },
+   handleSubmit() {
+ this.formTouched = !this.$v.formResponses.$anyDirty;
+  this.errors = this.$v.formResponses.$invalid;
+  console.log("error is"+this.errors+"  and form touched is"+this.formTouched);
+  this.uiState = "submit clicked";
+  if (this.errors === false && this.formTouched === false) {
+    this.uiState = "form submitted";
+  }
+
+            }
   }
 
 }
@@ -100,6 +199,9 @@ a {
     margin-top: 1%;
     margin-right: 1%;
 }
+.circle:hover{
+  cursor: pointer;
+}
 .qtext{
   font-size: 20px;
   font-weight: 500;
@@ -109,7 +211,7 @@ a {
 textarea{
   border-radius: 5px;
   display: inline-flex;
-  margin-top: 1%;
+  margin-top: 1em;
 }
 .qnumber{
   font-size: 20px;
@@ -127,23 +229,26 @@ textarea{
 #options{
   display: inline-flex;
 }
-#aoptions{
+#ansoptions{
   border:1px solid #ccc;
-  padding:10px;
+  padding:15px;
   display: inline-block;
   border-radius: 5px;
 }
-#aoptions span{
-  border-right:1px solid #ccc;
-  padding: 10px;
+#ansoptions:hover{
+  cursor: pointer;
 }
-#aoptions span:last-child{
+#ansoptions span{
+  border-right:1px solid #ccc;
+  padding: 15px;
+}
+#ansoptions span:last-child{
   border-right:none;
 } 
 input{
   padding: 10px;
     border-radius: 7px;
-    width: 35%;
+    width: 550px;
 }
 .submit{
   background-color: #46c4ba;
@@ -154,7 +259,67 @@ input{
     border-radius: 10px;
     margin-top: 50px;
     font-size: 18px;
+}
+#ansoptions-mobile div{
+  margin: auto;
+    margin-bottom: 5%;
+    width: 200px;
+    border: 1px solid #ccc;
+     padding: 10px;
+    border-radius: 10px;
+    float:left;
+}
+
+#ansoptions-mobile span{
+    padding: 11px;
+}
+#ansoptions-mobile span:nth-child(1){
+  padding-right:20%;
+  border-right:1px solid #ccc;
+}
+
+#ansoptions-mobile div:nth-child(1) span:nth-child(1){
+border-right:1px solid #ccc;
+padding-left:25px;
+}
+#ansoptions-mobile span:nth-child(2){
+  padding-left:20%;
+}
+.active{
+  background-color: rgba(162,225,220,1);
+  color:rgba(195,165,164,1);
+}
+#result{
+      float: right;
+    border: 1px solid #ccc;
+    margin-top: -45%;
+    padding: 50px;
+    border-radius: 30px;
+    background-color: rgba(244,244,244,1);
+    -webkit-box-shadow: 0px 3px 19px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 3px 19px 0px rgba(0,0,0,0.75);
+box-shadow: 0px 3px 19px 0px rgba(0,0,0,0.75);
+}
+
+#result hr{
+  border-color:red;
+}
+.error{
+  color:red;
+}
+@media (max-width: 767px) {
+  input {
+    width:80%;
     
+  }
+}
+@media (min-width: 484px) and (max-width: 979px) {
+  #ansoptions-mobile div{
+    width:325px;
+  }
+  #ansoptions-mobile span:nth-child(1) {
+    padding-right: 28%;
+  }
 }
 
 </style>
