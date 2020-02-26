@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="home">
     <h2>Customer Alliance Form </h2>
   <form @submit.prevent="handleSubmit">
    <div class="question">  
@@ -17,7 +17,7 @@
       </div>
    </div>   
   
-      <div class="question" v-responsive="['hidden-all','md','lg','xl']">
+      <div class="question" id="qdesktop" >
         <div class="qnumber">2.</div>
         <div class="qtext">Your age </div>
        <div id="ansoptions">
@@ -31,9 +31,9 @@
          <span v-on:click="ageselected('Your age','80+')">80+</span>
        </div>
       </div>
-        <div class="question" v-responsive.xs.sm>
+        <div class="question" id="qmobile" >
         <div class="qnumber">2.</div>
-        <div class="qtext">Your age Mobile </div>
+        <div class="qtext">Your Mobile </div>
        <div id="ansoptions-mobile">
          <div>
          <span >&lt;20</span>
@@ -57,21 +57,21 @@
         <div class="qnumber">3.</div>
         <div class="qtext">Your password </div>
          
-        <input id="fpass1" v-model="$v.formResponses.password1.$model" type="password">
-  <p class="error" v-if="!$v.formResponses.password1.required">The password field is required</p>
-  <p class="error" v-if="!$v.formResponses.password1.strongPassword">Passwords needs to have a letter, a number</p></div>
+        <input id="fpass1" v-model="$v.password1.$model" type="password">
+  <p class="error" v-if="!$v.password1.required">The password field is required</p>
+  <p class="error" v-if="!$v.password1.strongPassword">Passwords needs to have a letter, a number</p></div>
       <div class="question">
         <div class="qnumber">4.</div>
         <div class="qtext">Your email </div>
-           <input id="femail" v-model="$v.formResponses.email.$model" type="email">
-      <p class="error" v-if="!$v.formResponses.email.required">this field is required</p>
-      <p class="error" v-if="!$v.formResponses.email.email">Needs to be a valid email.</p>
+           <input id="femail" v-model="$v.email.$model" type="email">
+      <p class="error" v-if="!$v.email.required">this field is required</p>
+      <p class="error" v-if="!$v.email.email">Needs to be a valid email.</p>
     
   </div>
 
   <div> <button class="submit" type="submit" >Submit!</button>
  </div>
-  <div id="result" v-responsive="['hidden-all','xl']" v-if="!isResultHidden"><span id="qselected">{{qselected}}</span><br/><span id="ansselected">{{ansselected}}</span><hr/>
+  <div id="result"  v-if="!isResultHidden"><span id="qselected">{{qselected}}</span><br/><span id="ansselected">{{ansselected}}</span><hr/>
   <span>Date of experience<br/>{{new Date().toLocaleString()}}</span>
    </div>
   </form>
@@ -112,16 +112,13 @@ export default {
       formTouched:'',
     errors: false,
       
-      formResponses: {
        password1: '',
        email:null
-     }
      
     }
  },
  validations: {
    
-formResponses: {
    email: {
         required,
         email
@@ -133,8 +130,7 @@ formResponses: {
           /[a-z]/.test(password1) && // checks for a-z
           /[0-9]/.test(password1)  // checks for 0-9
          
-        );
-      }
+        )
     }
  }
  },  
@@ -155,9 +151,8 @@ formResponses: {
      this.isResultHidden=false;
    },
    handleSubmit() {
- this.formTouched = !this.$v.formResponses.$anyDirty;
-  this.errors = this.$v.formResponses.$invalid;
-  console.log("error is"+this.errors+"  and form touched is"+this.formTouched);
+ this.formTouched = !this.$v.$anyDirty;
+  this.errors = this.$v.$invalid;
   this.uiState = "submit clicked";
   if (this.errors === false && this.formTouched === false) {
     this.uiState = "form submitted";
@@ -171,20 +166,7 @@ formResponses: {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 .circle {
     width: 50px;
     height: 50px;
@@ -292,7 +274,9 @@ padding-left:25px;
 #result{
       float: right;
     border: 1px solid #ccc;
-    margin-top: -45%;
+    margin-top: -530px;
+    margin-left: 700px;
+    position:fixed;
     padding: 50px;
     border-radius: 30px;
     background-color: rgba(244,244,244,1);
@@ -307,11 +291,21 @@ box-shadow: 0px 3px 19px 0px rgba(0,0,0,0.75);
 .error{
   color:red;
 }
+#qdesktop,#qmobile{display:none}
 @media (max-width: 767px) {
   input {
     width:80%;
-    
   }
+  #qmobile{display:initial}
+  
+}
+@media (max-width: 991px) {
+#result{display:none!important}
+}
+
+@media (min-width: 768px) {
+#qdesktop{display:initial}
+
 }
 @media (min-width: 484px) and (max-width: 979px) {
   #ansoptions-mobile div{
