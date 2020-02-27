@@ -1,5 +1,11 @@
 # question-answer
 
+## Project Description
+1. Project displays form, allowing customer to provide their feedback
+2. Its build using vue, html5,css
+3. To verify the form field, vulidate is used
+4. For testing purpose vue-test-util is used 
+
 ## Project setup
 ```
 npm install
@@ -20,10 +26,3 @@ npm run build
 npm run test:unit
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
