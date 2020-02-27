@@ -3,7 +3,7 @@
 ## Project Description
 1. Project displays form, allowing customer to provide their feedback
 2. Its build using vue, html5,css
-3. To verify the form field, vulidate is used
+3. To verify the form field, vuelidate is used
 4. For testing purpose vue-test-util is used 
 
 ## Project setup
